@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "carpet-client",
+  "version": "1.2.2",
+
+  "name": "Carpet Client",
+  "description": "Client facing features of carpet mod",
+  "authors": [
+    "gnembon, DeadlyMC, ..."
+  ],
+  "contact": {
+    "homepage": "https://web.me/",
+    "sources": "https://github.com/gnembon/carpet-client"
+  },
+
+  "license": "LGPL-3.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "carpet": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
