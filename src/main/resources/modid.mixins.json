@@ -6,7 +6,9 @@
     "MinecraftServer_noopMixin"
   ],
   "client": [
-    "MinecraftClient_noopMixin"
+    "MinecraftClient_noopMixin",
+    "GameMenuScreenMixin",
+    "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

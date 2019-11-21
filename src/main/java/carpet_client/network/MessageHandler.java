@@ -4,6 +4,7 @@ import carpet.CarpetServer;
 import carpet.helpers.TickSpeed;
 import carpet.settings.CarpetSettings;
 import carpet.settings.ParsedRule;
+import carpet_client.utils.Reference;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.nbt.CompoundTag;
@@ -42,8 +43,8 @@ public class MessageHandler
         }
         data.put("rules", rulesList);
         PacketByteBuf packetBuf = new PacketByteBuf(Unpooled.buffer());
-        packetBuf.writeVarInt(Constants.GENERAL_INFO);
+        packetBuf.writeVarInt(Reference.GENERAL_INFO);
         packetBuf.writeCompoundTag(data);
-        playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(Constants.CARPET_CHANNEL_NAME, packetBuf));
+        playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(Reference.CARPET_CHANNEL_NAME, packetBuf));
     }
 }
