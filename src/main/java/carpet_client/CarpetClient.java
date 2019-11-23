@@ -2,7 +2,8 @@ package carpet_client;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet_client.network.MessageHandler;
+import carpet_client.network.ClientMessageHandler;
+import carpet_client.network.ServerMessageHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -45,7 +46,8 @@ public class CarpetClient implements CarpetExtension
     @Override
     public void onPlayerLoggedIn(ServerPlayerEntity player)
     {
-        MessageHandler.sendCarpetInfo(player);
+        ServerMessageHandler.sendGUIInfo(player);
+        ClientMessageHandler.setPlayer(player);
     }
 
     @Override

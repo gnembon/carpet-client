@@ -1,5 +1,6 @@
 package carpet_client.mixins;
 
+import carpet_client.network.ClientMessageHandler;
 import carpet_client.utils.Reference;
 import carpet_client.utils.CarpetRules;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -33,14 +34,8 @@ public abstract class ClientPlayNetworkHandlerMixin
     private void onOnCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci)
     {
         Identifier channel = packet.getChannel();
-        
-        if (Reference.CARPET_CHANNEL_NAME.equals(channel))
-        {
-            PacketByteBuf buf = packet.getData();
-            if (buf == null) return;
-            int id = buf.readVarInt();
-            CarpetRules.setAllData(buf, id);
-            ci.cancel();
-        }
+        PacketByteBuf buf = packet.getData();
+        ClientMessageHandler.receivedPacket(channel, buf);
+        ci.cancel();
     }
 }

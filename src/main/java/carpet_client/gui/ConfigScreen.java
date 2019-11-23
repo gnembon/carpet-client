@@ -27,7 +27,7 @@ public class ConfigScreen extends Screen
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 6 - 12, 200, 20, "Carpet Server Options", (button) -> {
             this.minecraft.openScreen(new ServerRulesScreen(this));
         }));
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 6 - 36, 200, 20, "Carpet Client Options", (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height / 6 + 12, 200, 20, "Carpet Client Options", (button) -> {
             // this.minecraft.openScreen(new ClientRulesScreen(this));
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"), (button) -> {
@@ -42,7 +42,7 @@ public class ConfigScreen extends Screen
     {
         this.renderBackground();
         this.drawCenteredString(this.font, "Carpet Client", this.width / 2, 8, 0xFFFFFF);
-        this.drawCenteredString(this.font, String.format("Carpet server version: %s", carpetServerVersion), this.width / 2, 8 + this.font.fontHeight, 0xFFFFFF);
+        this.drawCenteredString(this.font, String.format("Carpet server version: %s", carpetServerVersion), this.width / 2, 8 + this.font.fontHeight + 2, 0xFFFFFF);
         super.render(mouseX, mouseY, delta);
     }
 }

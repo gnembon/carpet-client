@@ -1,9 +1,14 @@
 package carpet_client.utils;
 
 import carpet_client.gui.ConfigScreen;
+import carpet_client.network.ClientMessageHandler;
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.PacketByteBuf;
 
 import java.util.ArrayList;
@@ -26,10 +31,10 @@ public class CarpetRules
         return rules.containsKey(rule);
     }
     
-    public static void setAllData(PacketByteBuf buf, int id)
+    public static void setAllData(PacketByteBuf buf)
     {
         CarpetRules.data = buf;
-        handle(id);
+        split();
         editClientRules();
     }
     
@@ -38,13 +43,7 @@ public class CarpetRules
     
     }
     
-    private static void handle(int id)
-    {
-        if (id == Reference.GENERAL_INFO)
-            splitBasicInfo();
-    }
-    
-    private static void splitBasicInfo()
+    private static void split()
     {
         CompoundTag compound = data.readCompoundTag();
         if (compound == null) return;
@@ -64,6 +63,38 @@ public class CarpetRules
         }
         ConfigScreen.setCarpetServerVersion(carpetServerVersion);
         Reference.isCarpetServer = true;
+    }
+    
+    public static void ruleData(PacketByteBuf data)
+    {
+        String rule = data.readString();
+        String newValue = data.readString();
+        getRule(rule).changeRule(newValue);
+    }
+    
+    public static void ruleChangeBoolean(String rule, String newValue, MinecraftClient client)
+    {
+        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+        data.writeVarInt(Reference.RULE_REQUEST);
+        data.writeString(rule);
+        data.writeString(newValue);
+        ClientMessageHandler.sendPacket(data, client);
+    }
+    
+    public static void resetRule(String rule)
+    {
+        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+        data.writeVarInt(Reference.RULE_REQUEST);
+        //data.writeVarInt(Reference.RESET_RULE);
+        data.writeString(rule);
+        //ClientMessageHandler.sendPacket(data);
+    }
+    
+    public static void requestUpdate()
+    {
+        PacketByteBuf sender = new PacketByteBuf(Unpooled.buffer());
+        sender.writeVarInt(Reference.ALL_GUI_INFO);
+        //ClientMessageHandler.sendPacket(sender);
     }
     
     public static ArrayList<CarpetSettingEntry> getAllRules()
@@ -154,9 +185,9 @@ public class CarpetRules
             return bool;
         }
         
-        public void setBoolean(boolean bool)
+        public String getDefaultOption()
         {
-            this.bool = bool;
+            return this.defaultOption;
         }
     }
 }
