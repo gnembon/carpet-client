@@ -49,7 +49,7 @@ public class ServerMessageHandler
             ruleNBT.putString("value", rule.getAsString());
             ruleNBT.putString("description", rule.description);
             ruleNBT.putString("default", rule.defaultAsString);
-            ruleNBT.putString("type", rule.type.getName());
+            ruleNBT.putString("type", rule.type.toString());
             ListTag extraList = new ListTag();
             if (rule.extraInfo != null)
             {
@@ -66,7 +66,7 @@ public class ServerMessageHandler
         playerEntity.networkHandler.sendPacket(new CustomPayloadS2CPacket(Reference.CARPET_CHANNEL_NAME, packetBuf));
     }
     
-    public static void sendRule(ServerPlayerEntity player, PacketByteBuf data)
+    private static void sendRule(ServerPlayerEntity player, PacketByteBuf data)
     {
         String rule = data.readString();
         String newValue = data.readString();

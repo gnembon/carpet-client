@@ -7,8 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.PacketByteBuf;
 
 import java.util.ArrayList;
@@ -56,10 +54,11 @@ public class CarpetRules
             String rule = ruleNBT.getString("rule");
             String value = ruleNBT.getString("value");
             String defaultOption = ruleNBT.getString("default");
+            String type = ruleNBT.getString("type");
             if (hasRule(rule))
                 getRule(rule).update(value, null, defaultOption);
             else
-                rules.put(rule, new CarpetSettingEntry(rule, value, null, defaultOption));
+                rules.put(rule, new CarpetSettingEntry(rule, value, null, defaultOption, type));
         }
         ConfigScreen.setCarpetServerVersion(carpetServerVersion);
         Reference.isCarpetServer = true;
@@ -72,22 +71,13 @@ public class CarpetRules
         getRule(rule).changeRule(newValue);
     }
     
-    public static void ruleChangeBoolean(String rule, String newValue, MinecraftClient client)
+    public static void ruleChange(String rule, String newValue, MinecraftClient client)
     {
         PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
         data.writeVarInt(Reference.RULE_REQUEST);
         data.writeString(rule);
         data.writeString(newValue);
         ClientMessageHandler.sendPacket(data, client);
-    }
-    
-    public static void resetRule(String rule)
-    {
-        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-        data.writeVarInt(Reference.RULE_REQUEST);
-        //data.writeVarInt(Reference.RESET_RULE);
-        data.writeString(rule);
-        //ClientMessageHandler.sendPacket(data);
     }
     
     public static void requestUpdate()
@@ -112,16 +102,18 @@ public class CarpetRules
         private String rule;
         private String currentOption;
         private String defaultOption;
-        private boolean isNumber;
-        private boolean isSomethingElse;
+        private String type;
+        private boolean isString;
+        private boolean isBool;
+        private boolean isInteger;
+        private boolean isDouble;
+        private boolean isEnum;
         private String[] options;
-        private int integer;
-        private float flt;
-        private boolean bool;
     
-        public CarpetSettingEntry(String rule, String currentOption, String[] options, String defaultOption)
+        public CarpetSettingEntry(String rule, String currentOption, String[] options, String defaultOption, String type)
         {
             this.rule = rule;
+            this.type = type;
             this.update(currentOption, options, defaultOption);
         }
     
@@ -136,53 +128,40 @@ public class CarpetRules
     
         private void checkValues()
         {
-            this.bool = Boolean.parseBoolean(this.currentOption);
-        
-            try
-            {
-                this.integer = Integer.parseInt(this.currentOption);
-            }
-            catch (NumberFormatException e)
-            {
-                this.integer = 0;
-            }
-        
-            try
-            {
-                this.flt = Float.parseFloat(this.currentOption);
-                this.isNumber = true;
-            }
-            catch (NumberFormatException e)
-            {
-                this.isNumber = false;
-                this.flt = 0.0F;
-            }
+    
+            if (this.type.equals(String.class.toString()))
+                this.isString = true;
+            else if (this.type.equals(boolean.class.toString()))
+                this.isBool = true;
+            else if (this.type.equals(int.class.toString()))
+                this.isInteger = true;
+            else if (this.type.equals(double.class.toString()))
+                this.isDouble = true;
+            else if (this.type.equals(Enum.class.toString()))
+                this.isEnum = true;
         }
         
-        public String getRule()
-        {
-            return rule;
-        }
+        public String getRule() { return this.rule; }
         
-        public String getCurrentOption()
-        {
-            return currentOption;
-        }
+        public String getCurrentOption() { return this.currentOption; }
         
-        public boolean isNumber()
-        {
-            return isNumber;
-        }
+        public boolean isInteger() { return this.isInteger; }
+        
+        public boolean isBool() { return this.isBool; }
+        
+        public boolean isDouble() { return this.isDouble; }
+        
+        public boolean isEnum() { return this.isEnum; }
+        
+        public boolean isString() { return this.isString; }
+        
+        public String[] getOptions() { return this.options; }
     
         public void changeRule(String change)
         {
             this.currentOption = change;
             this.checkValues();
             editClientRules();
-        }
-        
-        public boolean getBoolean() {
-            return bool;
         }
         
         public String getDefaultOption()

@@ -5,8 +5,7 @@
   "mixins": [
     "MinecraftServer_noopMixin",
     "CustomPayloadC2SPacketAccessor",
-    "ServerPlayNetworkHandlerMixin",
-    "ParsedRuleMixin"
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "MinecraftClient_noopMixin",
