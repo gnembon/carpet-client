@@ -50,7 +50,7 @@ public class ServerRulesScreen extends Screen
     {
         this.renderBackground();
         this.list.render(mouseX, mouseY, delta);
-        this.drawCenteredString(this.font, "Carpet Server Options", this.width / 2, 8, 0xFFFFFF);
+        this.drawCenteredString(this.font, "Carpet Settings", this.width / 2, 8, 0xFFFFFF);
         if (this.invalid)
         {
             String text = this.isEmpty ? "You can't leave the field empty!" : "Invalid value! Type an integer!";
