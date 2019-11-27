@@ -31,8 +31,6 @@ public class ConfigScreen extends Screen
             // this.minecraft.openScreen(new ClientRulesScreen(this));
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"), (button) -> {
-            this.minecraft.options.write();
-            this.minecraft.window.method_4475();
             this.minecraft.openScreen(this.parent);
         }));
     }

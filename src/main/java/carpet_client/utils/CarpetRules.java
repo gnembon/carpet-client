@@ -80,11 +80,11 @@ public class CarpetRules
         ClientMessageHandler.sendPacket(data, client);
     }
     
-    public static void requestUpdate()
+    public static void requestUpdate(MinecraftClient client)
     {
-        PacketByteBuf sender = new PacketByteBuf(Unpooled.buffer());
-        sender.writeVarInt(Reference.ALL_GUI_INFO);
-        //ClientMessageHandler.sendPacket(sender);
+        PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
+        data.writeVarInt(Reference.ALL_GUI_INFO);
+        ClientMessageHandler.sendPacket(data, client);
     }
     
     public static ArrayList<CarpetSettingEntry> getAllRules()
