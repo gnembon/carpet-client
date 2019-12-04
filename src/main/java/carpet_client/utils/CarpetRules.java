@@ -55,10 +55,11 @@ public class CarpetRules
             String value = ruleNBT.getString("value");
             String defaultOption = ruleNBT.getString("default");
             String type = ruleNBT.getString("type");
+            String description = ruleNBT.getString("description");
             if (hasRule(rule))
                 getRule(rule).update(value, null, defaultOption);
             else
-                rules.put(rule, new CarpetSettingEntry(rule, value, null, defaultOption, type));
+                rules.put(rule, new CarpetSettingEntry(rule, value, null, defaultOption, type, description));
         }
         ConfigScreen.setCarpetServerVersion(carpetServerVersion);
         Reference.isCarpetServer = true;
@@ -103,6 +104,7 @@ public class CarpetRules
         private String currentOption;
         private String defaultOption;
         private String type;
+        private String description;
         private boolean isString;
         private boolean isBool;
         private boolean isInteger;
@@ -110,10 +112,11 @@ public class CarpetRules
         private boolean isEnum;
         private String[] options;
     
-        public CarpetSettingEntry(String rule, String currentOption, String[] options, String defaultOption, String type)
+        public CarpetSettingEntry(String rule, String currentOption, String[] options, String defaultOption, String type, String description)
         {
             this.rule = rule;
             this.type = type;
+            this.description = description;
             this.update(currentOption, options, defaultOption);
         }
     
@@ -156,6 +159,8 @@ public class CarpetRules
         public boolean isString() { return this.isString; }
         
         public String[] getOptions() { return this.options; }
+        
+        public String getDescription() { return this.description; }
     
         public void changeRule(String change)
         {

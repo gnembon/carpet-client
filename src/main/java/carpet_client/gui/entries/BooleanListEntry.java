@@ -3,6 +3,8 @@ package carpet_client.gui.entries;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
 import carpet_client.utils.CarpetRules;
+import carpet_client.utils.ITooltipEntry;
+import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +17,7 @@ import net.minecraft.client.resource.language.I18n;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BooleanListEntry extends ConfigListWidget.Entry
+public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltipEntry
 {
     private final CarpetRules.CarpetSettingEntry settings;
     private final String rule;
@@ -32,7 +34,7 @@ public class BooleanListEntry extends ConfigListWidget.Entry
         this.gui = gui;
         this.rule = settings.getRule();
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
-            System.out.println("Description!!");
+            button.active = false;
         }));
         this.editButton = new ButtonWidget(0, 0, 100, 20, settings.getCurrentOption(), (buttonWidget) -> {
             String invertedBoolean = String.valueOf(!Boolean.parseBoolean(buttonWidget.getMessage()));
@@ -72,5 +74,15 @@ public class BooleanListEntry extends ConfigListWidget.Entry
     public List<? extends Element> children()
     {
         return ImmutableList.of(this.infoButton ,this.editButton, this.resetButton);
+    }
+    
+    @Override
+    public void drawTooltip(int slotIndex, int x, int y, int mouseX, int mouseY, int listWidth, int listHeight, int slotWidth, int slotHeight, float partialTicks)
+    {
+        if (this.infoButton.isHovered() && !this.infoButton.active)
+        {
+            String description = this.settings.getDescription();
+            RenderHelper.drawGuiInfoBox(client.textRenderer, description, mouseY + 5, listWidth, slotWidth, listHeight, 48);
+        }
     }
 }

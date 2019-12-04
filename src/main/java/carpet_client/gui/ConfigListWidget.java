@@ -4,18 +4,22 @@ import carpet_client.gui.entries.BooleanListEntry;
 import carpet_client.gui.entries.NumberListEntry;
 import carpet_client.gui.entries.StringListEntry;
 import carpet_client.utils.CarpetRules;
+import carpet_client.utils.ITooltipEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry>
 {
     private ServerRulesScreen gui;
     public static int length;
+    private final List<ConfigListWidget.Entry> entries = new ArrayList<>();
     
     public ConfigListWidget(ServerRulesScreen gui, MinecraftClient client)
     {
@@ -30,11 +34,23 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry>
                 length = i;
             }
             if (r.isBool())
-                this.addEntry(new BooleanListEntry(r, client, gui));
+            {
+                BooleanListEntry booleanList = new BooleanListEntry(r, client, gui);
+                this.addEntry(booleanList);
+                this.entries.add(booleanList);
+            }
             else if (r.isInteger() || r.isDouble())
-                this.addEntry(new NumberListEntry(r, client, gui));
+            {
+                NumberListEntry numberList = new NumberListEntry(r, client, gui);
+                this.addEntry(numberList);
+                this.entries.add(numberList);
+            }
             else
-                this.addEntry(new StringListEntry(r, client, gui));
+            {
+                StringListEntry stringList = new StringListEntry(r, client, gui);
+                this.addEntry(stringList);
+                this.entries.add(stringList);
+            }
         }
     }
     
@@ -48,6 +64,34 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry>
     public int getRowWidth()
     {
         return 180 * 2;
+    }
+    
+    private int getSize()
+    {
+        return this.entries.size();
+    }
+    
+    private ParentElement getListEntry(int i)
+    {
+        return this.entries.get(i);
+    }
+    
+    public void drawTooltip(int mouseX, int mouseY, float delta)
+    {
+        int insideLeft = this.left + this.width / 2 - this.getRowWidth() / 2 + 2;
+        int insideTop = this.top + 4 - (int) this.getScrollAmount();
+        int l = this.itemHeight - 4;
+        
+        for (int i = 0; i < this.getSize(); i++)
+        {
+            int k = insideTop + i * this.itemHeight + this.headerHeight;
+            
+            ParentElement entry = getListEntry(i);
+            if (entry instanceof ITooltipEntry)
+            {
+                ((ITooltipEntry) entry).drawTooltip(i, insideLeft, k, mouseX, mouseY, this.getRowWidth(), this.height, this.width, l, delta);
+            }
+        }
     }
     
     @Environment(EnvType.CLIENT)

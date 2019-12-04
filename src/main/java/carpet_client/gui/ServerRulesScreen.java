@@ -50,6 +50,7 @@ public class ServerRulesScreen extends Screen
     {
         this.renderBackground();
         this.list.render(mouseX, mouseY, delta);
+        this.drawTooltip(mouseX, mouseY, delta);
         this.drawCenteredString(this.font, "Carpet Settings", this.width / 2, 8, 0xFFFFFF);
         if (this.invalid)
         {
@@ -60,6 +61,11 @@ public class ServerRulesScreen extends Screen
             drawString(this.font, text, 18, 12, 16733525);
         }
         super.render(mouseX, mouseY, delta);
+    }
+    
+    public void drawTooltip(int mouseX, int mouseY, float delta)
+    {
+        this.list.drawTooltip(mouseX, mouseY, delta);
     }
     
     public void setInvalid(boolean invalid)

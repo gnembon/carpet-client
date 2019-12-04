@@ -2,7 +2,6 @@ package carpet_client;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet_client.network.ClientMessageHandler;
 import carpet_client.network.ServerMessageHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -58,7 +57,6 @@ public class CarpetClient implements CarpetExtension
     public void onPlayerLoggedIn(ServerPlayerEntity player)
     {
         ServerMessageHandler.sendGUIInfo(player);
-        ClientMessageHandler.setPlayer(player);
     }
 
     @Override

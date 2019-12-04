@@ -3,6 +3,8 @@ package carpet_client.gui.entries;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
 import carpet_client.utils.CarpetRules;
+import carpet_client.utils.ITooltipEntry;
+import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -16,7 +18,7 @@ import net.minecraft.item.Items;
 
 import java.util.List;
 
-public class StringListEntry extends ConfigListWidget.Entry
+public class StringListEntry extends ConfigListWidget.Entry implements ITooltipEntry
 {
     private final CarpetRules.CarpetSettingEntry settings;
     private final String rule;
@@ -33,7 +35,7 @@ public class StringListEntry extends ConfigListWidget.Entry
         this.gui = gui;
         this.rule = settings.getRule();
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
-            System.out.println("Description!!");
+            button.active = false;
         }));
         TextFieldWidget stringField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type a string value");
         stringField.setText(settings.getCurrentOption());
@@ -93,6 +95,16 @@ public class StringListEntry extends ConfigListWidget.Entry
     public List<? extends Element> children()
     {
         return ImmutableList.of(this.infoButton ,this.textField, this.resetButton);
+    }
+    
+    @Override
+    public void drawTooltip(int slotIndex, int x, int y, int mouseX, int mouseY, int listWidth, int listHeight, int slotWidth, int slotHeight, float partialTicks)
+    {
+        if (this.infoButton.isHovered() && !this.infoButton.active)
+        {
+            String description = this.settings.getDescription();
+            RenderHelper.drawGuiInfoBox(client.textRenderer, description, mouseY + 5, listWidth, slotWidth, listHeight, 48);
+        }
     }
     
     private void onRuleChanged(String rule, String newValue, MinecraftClient client, TextFieldWidget widget, CarpetRules.CarpetSettingEntry settings)
