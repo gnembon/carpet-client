@@ -28,6 +28,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
     private final ButtonWidget resetButton;
     private final MinecraftClient client;
     private final ServerRulesScreen gui;
+    private boolean invalid;
     
     public StringListEntry(final CarpetRules.CarpetSettingEntry settings, MinecraftClient client, ServerRulesScreen gui)
     {
@@ -40,6 +41,9 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         }));
         TextFieldWidget stringField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type a string value");
         stringField.setText(settings.getCurrentOption());
+        stringField.setChangedListener(s -> {
+            this.checkForInvalid(stringField);
+        });
         this.textField = stringField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
             CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
@@ -62,7 +66,8 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         {
             this.textField.setText(this.textField.getText());
             this.textField.changeFocus(false);
-            this.onRuleChanged(settings.getRule(), this.textField.getText(), client, this.textField, settings);
+            if (!this.invalid)
+                CarpetRules.ruleChange(settings.getRule(), this.textField.getText(), client);
         }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.textField.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -112,18 +117,23 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         }
     }
     
-    private void onRuleChanged(String rule, String newValue, MinecraftClient client, TextFieldWidget widget, CarpetRules.CarpetSettingEntry settings)
+    private void setInvalid(boolean invalid)
+    {
+        this.invalid = invalid;
+        this.gui.setInvalid(invalid);
+    }
+    
+    private void checkForInvalid(TextFieldWidget widget)
     {
         boolean empty = widget.getText().isEmpty();
         if (empty)
         {
             this.gui.setEmpty(true);
-            this.gui.setInvalid(true);
+            this.setInvalid(true);
         }
         else
         {
-            this.gui.setInvalid(false);
-            CarpetRules.ruleChange(rule, newValue, client);
+            this.setInvalid(false);
         }
     }
 }

@@ -3,6 +3,7 @@ package carpet_client;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import carpet_client.network.ServerMessageHandler;
+import carpet_client.utils.Reference;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.MinecraftServer;
@@ -39,6 +40,7 @@ public class CarpetClient implements CarpetExtension
     {
         // reloading of /carpet settings is handled by carpet
         // reloading of own settings is handled as an extension, since we claim own settings manager
+        Reference.isCarpetClientPresent = true;
     }
 
     @Override

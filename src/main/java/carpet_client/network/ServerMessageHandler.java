@@ -73,6 +73,9 @@ public class ServerMessageHandler
         if (player.allowsPermissionLevel(2))
         {
             CarpetServer.settingsManager.getRule(rule).set(player.getCommandSource(), newValue);
+            Messenger.m(player.getCommandSource(), "w " + rule + ": " + newValue + ", ", "c [change permanently?]",
+                    "^w Click to keep the settings in carpet.conf to save across restarts",
+                    "?/carpet setDefault " + rule + " " + newValue);
         }
         else
         {

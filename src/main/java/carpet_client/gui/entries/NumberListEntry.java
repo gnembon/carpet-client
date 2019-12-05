@@ -41,6 +41,9 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         }));
         TextFieldWidget numField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type an integer value");
         numField.setText(settings.getCurrentOption());
+        numField.setChangedListener(s -> {
+            this.checkForInvalid(s, numField, settings);
+        });
         this.numberField = numField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
             CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
@@ -63,7 +66,8 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         {
             this.numberField.setText(this.numberField.getText());
             this.numberField.changeFocus(false);
-            this.onRuleChanged(settings.getRule(), this.numberField.getText(), client, this.numberField, settings);
+            if (!this.invalid)
+                CarpetRules.ruleChange(settings.getRule(), this.numberField.getText(), client);
         }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.numberField.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -120,7 +124,7 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.gui.setInvalid(invalid);
     }
     
-    private void onRuleChanged(String rule, String newValue, MinecraftClient client, TextFieldWidget widget, CarpetRules.CarpetSettingEntry settings)
+    private void checkForInvalid(String newValue, TextFieldWidget widget, CarpetRules.CarpetSettingEntry settings)
     {
         this.gui.setEmpty(widget.getText().isEmpty());
         boolean isNumber;
@@ -137,13 +141,8 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
             isNumber = false;
         }
         if (isNumber)
-        {
-            CarpetRules.ruleChange(rule, newValue, client);
             this.setInvalid(false);
-        }
         else
-        {
             this.setInvalid(true);
-        }
     }
 }
