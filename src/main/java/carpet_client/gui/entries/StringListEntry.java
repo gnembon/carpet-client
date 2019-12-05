@@ -15,6 +15,7 @@ import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -39,9 +40,6 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         }));
         TextFieldWidget stringField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type a string value");
         stringField.setText(settings.getCurrentOption());
-        stringField.setChangedListener( (s -> {
-            this.onRuleChanged(settings.getRule(), s, client, stringField, settings);
-        }));
         this.textField = stringField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
             CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
@@ -59,6 +57,13 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers)
     {
+        // ENTER KEY -> 257
+        if (keyCode == GLFW.GLFW_KEY_ENTER)
+        {
+            this.textField.setText(this.textField.getText());
+            this.textField.changeFocus(false);
+            this.onRuleChanged(settings.getRule(), this.textField.getText(), client, this.textField, settings);
+        }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.textField.keyPressed(keyCode, scanCode, modifiers);
     }
     

@@ -15,6 +15,7 @@ import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -38,11 +39,8 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
             button.active = false;
         }));
-        TextFieldWidget numField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type a string value");
+        TextFieldWidget numField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type an integer value");
         numField.setText(settings.getCurrentOption());
-        numField.setChangedListener( (s -> {
-            this.onRuleChanged(settings.getRule(), s, client, numField, settings);
-        }));
         this.numberField = numField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
             CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
@@ -60,6 +58,13 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers)
     {
+        // ENTER KEY -> 257
+        if (keyCode == GLFW.GLFW_KEY_ENTER)
+        {
+            this.numberField.setText(this.numberField.getText());
+            this.numberField.changeFocus(false);
+            this.onRuleChanged(settings.getRule(), this.numberField.getText(), client, this.numberField, settings);
+        }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.numberField.keyPressed(keyCode, scanCode, modifiers);
     }
     
