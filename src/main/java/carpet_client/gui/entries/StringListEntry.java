@@ -6,12 +6,12 @@ import carpet_client.utils.CarpetRules;
 import carpet_client.utils.ITooltipEntry;
 import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -88,9 +88,9 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.textField.y = y + 3;
         if (this.textField.getText().isEmpty())
         {
-            GuiLighting.enableForItems();
+            RenderSystem.enableRescaleNormal();
             client.getItemRenderer().renderGuiItemIcon(new ItemStack(Items.BARRIER), this.textField.x + this.textField.getWidth() - 18, this.textField.y- 1);
-            GuiLighting.disable();
+            RenderSystem.disableRescaleNormal();
         }
         
         this.infoButton.x = x + 156;
