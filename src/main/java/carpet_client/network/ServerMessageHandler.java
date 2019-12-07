@@ -54,7 +54,7 @@ public class ServerMessageHandler
             if (rule.extraInfo != null)
             {
                 for (String extra : rule.extraInfo)
-                    extraList.add(new StringTag(extra));
+                    extraList.add(StringTag.of(extra));
             }
             ruleNBT.put("extraInfo", extraList);
             rulesList.add(ruleNBT);
