@@ -3,10 +3,14 @@
   "package": "carpet_client.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MinecraftServer_noopMixin"
+    "MinecraftServer_noopMixin",
+    "CustomPayloadC2SPacketAccessor",
+    "ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "MinecraftClient_noopMixin"
+    "MinecraftClient_noopMixin",
+    "GameMenuScreenMixin",
+    "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
