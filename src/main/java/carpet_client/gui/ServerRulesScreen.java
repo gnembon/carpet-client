@@ -30,7 +30,7 @@ public class ServerRulesScreen extends Screen
     {
         this.list = new ConfigListWidget(this, this.minecraft);
         this.children.add(this.list);
-        this.addButton(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, "Force Update", (buttonWidget) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, "Refresh", (buttonWidget) -> {
             CarpetRules.requestUpdate(this.minecraft);
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 155 + 160, this.height - 29, 150, 20, I18n.translate("gui.done"), (buttonWidget) -> {
