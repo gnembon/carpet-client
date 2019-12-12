@@ -2,7 +2,7 @@ package carpet_client.network;
 
 import carpet.CarpetServer;
 import carpet.helpers.TickSpeed;
-import carpet.settings.CarpetSettings;
+import carpet.CarpetSettings;
 import carpet.settings.ParsedRule;
 import carpet.utils.Messenger;
 import carpet_client.utils.Reference;
