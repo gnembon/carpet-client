@@ -19,6 +19,12 @@ public class CarpetClient implements CarpetExtension
     }
 
     @Override
+    public String version()
+    {
+        return "carpet-client";
+    }
+
+    @Override
     public void onGameStarted()
     {
         // let's /carpet handle our few simple settings
