@@ -1,5 +1,6 @@
 package carpet_client.gui.entries;
 
+import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
 import carpet_client.utils.CarpetRules;
@@ -19,7 +20,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltipEntry
 {
-    private final CarpetRules.CarpetSettingEntry settings;
+    private final ParsedRule<?> settings;
     private final String rule;
     private final ButtonWidget infoButton;
     private final ButtonWidget editButton;
@@ -27,23 +28,23 @@ public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltip
     private final MinecraftClient client;
     private final ServerRulesScreen gui;
     
-    public BooleanListEntry(final CarpetRules.CarpetSettingEntry settings, MinecraftClient client, ServerRulesScreen gui)
+    public BooleanListEntry(final ParsedRule<?> settings, MinecraftClient client, ServerRulesScreen gui)
     {
         this.settings = settings;
         this.client = client;
         this.gui = gui;
-        this.rule = settings.getRule();
+        this.rule = settings.name;
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
             button.active = false;
         }));
-        this.editButton = new ButtonWidget(0, 0, 100, 20, settings.getCurrentOption(), (buttonWidget) -> {
+        this.editButton = new ButtonWidget(0, 0, 100, 20, settings.getAsString(), (buttonWidget) -> {
             String invertedBoolean = String.valueOf(!Boolean.parseBoolean(buttonWidget.getMessage()));
-            CarpetRules.ruleChange(settings.getRule(), invertedBoolean, client);
+            CarpetRules.ruleChange(settings.name, invertedBoolean, client);
             buttonWidget.setMessage(invertedBoolean);
         });
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
-            CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
-            this.editButton.setMessage(settings.getDefaultOption());
+            CarpetRules.ruleChange(settings.name, settings.defaultAsString, client);
+            this.editButton.setMessage(settings.defaultAsString);
         });
     }
     
@@ -57,7 +58,7 @@ public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltip
         
         this.resetButton.x = x + 290;
         this.resetButton.y = y;
-        this.resetButton.active = !this.settings.getCurrentOption().equals(this.settings.getDefaultOption());
+        this.resetButton.active = !this.settings.getAsString().equals(this.settings.defaultAsString);
         
         this.editButton.x = x + 180;
         this.editButton.y = y;
@@ -81,7 +82,7 @@ public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltip
     {
         if (this.infoButton.isHovered() && !this.infoButton.active)
         {
-            String description = this.settings.getDescription();
+            String description = this.settings.description;
             RenderHelper.drawGuiInfoBox(client.textRenderer, description, mouseY + 5, listWidth, slotWidth, listHeight, 48);
         }
     }

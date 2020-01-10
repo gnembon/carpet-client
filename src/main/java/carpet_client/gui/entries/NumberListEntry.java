@@ -1,5 +1,6 @@
 package carpet_client.gui.entries;
 
+import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
 import carpet_client.utils.CarpetRules;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipEntry
 {
-    private final CarpetRules.CarpetSettingEntry settings;
+    private final ParsedRule<?> settings;
     private final String rule;
     private final ButtonWidget infoButton;
     private final TextFieldWidget numberField;
@@ -30,24 +31,24 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
     private final ServerRulesScreen gui;
     private boolean invalid;
     
-    public NumberListEntry(final CarpetRules.CarpetSettingEntry settings, MinecraftClient client, ServerRulesScreen gui)
+    public NumberListEntry(final ParsedRule<?> settings, MinecraftClient client, ServerRulesScreen gui)
     {
         this.settings = settings;
         this.client = client;
         this.gui = gui;
-        this.rule = settings.getRule();
+        this.rule = settings.name;
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
             button.active = false;
         }));
         TextFieldWidget numField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type an integer value");
-        numField.setText(settings.getCurrentOption());
+        numField.setText(settings.getAsString());
         numField.setChangedListener(s -> {
             this.checkForInvalid(s, numField, settings);
         });
         this.numberField = numField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
-            CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
-            numField.setText(settings.getDefaultOption());
+            CarpetRules.ruleChange(settings.name, settings.defaultAsString, client);
+            numField.setText(settings.defaultAsString);
         });
         gui.getNumberFieldList().add(this.numberField);
     }
@@ -67,7 +68,7 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
             this.numberField.setText(this.numberField.getText());
             this.numberField.changeFocus(false);
             if (!this.invalid)
-                CarpetRules.ruleChange(settings.getRule(), this.numberField.getText(), client);
+                CarpetRules.ruleChange(settings.name, this.numberField.getText(), client);
         }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.numberField.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -82,7 +83,7 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         
         this.resetButton.x = x + 290;
         this.resetButton.y = y;
-        this.resetButton.active = !this.settings.getCurrentOption().equals(this.settings.getDefaultOption()) || this.invalid;
+        this.resetButton.active = !this.settings.getAsString().equals(this.settings.defaultAsString) || this.invalid;
         
         this.numberField.x = x + 182;
         this.numberField.y = y + 3;
@@ -113,7 +114,7 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
     {
         if (this.infoButton.isHovered() && !this.infoButton.active)
         {
-            String description = this.settings.getDescription();
+            String description = this.settings.description;
             RenderHelper.drawGuiInfoBox(client.textRenderer, description, mouseY + 5, listWidth, slotWidth, listHeight, 48);
         }
     }
@@ -124,15 +125,15 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.gui.setInvalid(invalid);
     }
     
-    private void checkForInvalid(String newValue, TextFieldWidget widget, CarpetRules.CarpetSettingEntry settings)
+    private void checkForInvalid(String newValue, TextFieldWidget widget, ParsedRule<?> settings)
     {
         this.gui.setEmpty(widget.getText().isEmpty());
         boolean isNumber;
         try
         {
-            if (settings.isInteger())
+            if (settings.type == int.class)
                 Integer.parseInt(newValue);
-            else if (settings.isDouble())
+            else if (settings.type == double.class)
                 Double.parseDouble(newValue);
             isNumber = true;
         }
