@@ -3,7 +3,8 @@ package carpet_client.gui.entries;
 import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
-import carpet_client.utils.CarpetRules;
+import carpet_client.utils.CarpetSettingsClientNetworkHandler;
+import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.ITooltipEntry;
 import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
@@ -47,7 +48,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         });
         this.textField = stringField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
-            CarpetRules.ruleChange(settings.name, settings.defaultAsString, client);
+            CarpetSettingsServerNetworkHandler.ruleChange(settings.name, settings.defaultAsString, client);
             stringField.setText(settings.defaultAsString);
         });
         gui.getStringFieldList().add(this.textField);
@@ -68,7 +69,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
             this.textField.setText(this.textField.getText());
             this.textField.changeFocus(false);
             if (!this.invalid)
-                CarpetRules.ruleChange(settings.name, this.textField.getText(), client);
+                CarpetSettingsServerNetworkHandler.ruleChange(settings.name, this.textField.getText(), client);
         }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.textField.keyPressed(keyCode, scanCode, modifiers);
     }

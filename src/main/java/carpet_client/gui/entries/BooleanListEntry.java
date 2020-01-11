@@ -3,7 +3,8 @@ package carpet_client.gui.entries;
 import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
-import carpet_client.utils.CarpetRules;
+import carpet_client.utils.CarpetSettingsClientNetworkHandler;
+import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.ITooltipEntry;
 import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
@@ -39,11 +40,11 @@ public class BooleanListEntry extends ConfigListWidget.Entry implements ITooltip
         }));
         this.editButton = new ButtonWidget(0, 0, 100, 20, settings.getAsString(), (buttonWidget) -> {
             String invertedBoolean = String.valueOf(!Boolean.parseBoolean(buttonWidget.getMessage()));
-            CarpetRules.ruleChange(settings.name, invertedBoolean, client);
+            CarpetSettingsServerNetworkHandler.ruleChange(settings.name, invertedBoolean, client);
             buttonWidget.setMessage(invertedBoolean);
         });
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
-            CarpetRules.ruleChange(settings.name, settings.defaultAsString, client);
+            CarpetSettingsServerNetworkHandler.ruleChange(settings.name, settings.defaultAsString, client);
             this.editButton.setMessage(settings.defaultAsString);
         });
     }
