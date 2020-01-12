@@ -1,8 +1,9 @@
 package carpet_client.gui.entries;
 
+import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
-import carpet_client.utils.CarpetRules;
+import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.ITooltipEntry;
 import carpet_client.utils.RenderHelper;
 import com.google.common.collect.ImmutableList;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class StringListEntry extends ConfigListWidget.Entry implements ITooltipEntry
 {
-    private final CarpetRules.CarpetSettingEntry settings;
+    private final ParsedRule<?> settings;
     private final String rule;
     private final ButtonWidget infoButton;
     private final TextFieldWidget textField;
@@ -30,24 +31,24 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
     private final ServerRulesScreen gui;
     private boolean invalid;
     
-    public StringListEntry(final CarpetRules.CarpetSettingEntry settings, MinecraftClient client, ServerRulesScreen gui)
+    public StringListEntry(final ParsedRule<?> settings, MinecraftClient client, ServerRulesScreen gui)
     {
         this.settings = settings;
         this.client = client;
         this.gui = gui;
-        this.rule = settings.getRule();
+        this.rule = settings.name;
         this.infoButton = new ButtonWidget(0, 0, 14, 20, "i", (button -> {
             button.active = false;
         }));
         TextFieldWidget stringField = new TextFieldWidget(client.textRenderer, 0, 0, 96, 14, "Type a string value");
-        stringField.setText(settings.getCurrentOption());
+        stringField.setText(settings.getAsString());
         stringField.setChangedListener(s -> {
             this.checkForInvalid(stringField);
         });
         this.textField = stringField;
         this.resetButton = new ButtonWidget(0, 0, 50, 20, I18n.translate("controls.reset"), (buttonWidget) -> {
-            CarpetRules.ruleChange(settings.getRule(), settings.getDefaultOption(), client);
-            stringField.setText(settings.getDefaultOption());
+            CarpetSettingsServerNetworkHandler.ruleChange(settings.name, settings.defaultAsString, client);
+            stringField.setText(settings.defaultAsString);
         });
         gui.getStringFieldList().add(this.textField);
     }
@@ -67,7 +68,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
             this.textField.setText(this.textField.getText());
             this.textField.changeFocus(false);
             if (!this.invalid)
-                CarpetRules.ruleChange(settings.getRule(), this.textField.getText(), client);
+                CarpetSettingsServerNetworkHandler.ruleChange(settings.name, this.textField.getText(), client);
         }
         return super.keyPressed(keyCode, scanCode, modifiers) || this.textField.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -82,7 +83,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         
         this.resetButton.x = x + 290;
         this.resetButton.y = y;
-        this.resetButton.active = !this.settings.getCurrentOption().equals(this.settings.getDefaultOption());
+        this.resetButton.active = !this.settings.getAsString().equals(this.settings.defaultAsString);
         
         this.textField.x = x + 182;
         this.textField.y = y + 3;
@@ -112,7 +113,7 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
     {
         if (this.infoButton.isHovered() && !this.infoButton.active)
         {
-            String description = this.settings.getDescription();
+            String description = this.settings.description;
             RenderHelper.drawGuiInfoBox(client.textRenderer, description, mouseY + 5, listWidth, slotWidth, listHeight, 48);
         }
     }

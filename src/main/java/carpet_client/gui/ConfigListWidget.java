@@ -1,9 +1,10 @@
 package carpet_client.gui;
 
+import carpet.CarpetServer;
+import carpet.settings.ParsedRule;
 import carpet_client.gui.entries.BooleanListEntry;
 import carpet_client.gui.entries.NumberListEntry;
 import carpet_client.gui.entries.StringListEntry;
-import carpet_client.utils.CarpetRules;
 import carpet_client.utils.ITooltipEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.widget.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -25,21 +27,20 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry>
     {
         super(client, gui.width + 45, gui.height, 43, gui.height - 32, 20);
         this.gui = gui;
-        ArrayList<CarpetRules.CarpetSettingEntry> rules = CarpetRules.getAllRules();
-        for (CarpetRules.CarpetSettingEntry r : rules)
-        {
-            int i = client.textRenderer.getStringWidth(r.getRule());
+        Collection<ParsedRule<?>> rules = CarpetServer.settingsManager.getRules();
+        rules.forEach(r -> {
+            int i = client.textRenderer.getStringWidth(r.name);
             if (i > length)
             {
                 length = i;
             }
-            if (r.isBool())
+            if (r.type == boolean.class)
             {
                 BooleanListEntry booleanList = new BooleanListEntry(r, client, gui);
                 this.addEntry(booleanList);
                 this.entries.add(booleanList);
             }
-            else if (r.isInteger() || r.isDouble())
+            else if (r.type == int.class || r.type == double.class)
             {
                 NumberListEntry numberList = new NumberListEntry(r, client, gui);
                 this.addEntry(numberList);
@@ -51,7 +52,7 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry>
                 this.addEntry(stringList);
                 this.entries.add(stringList);
             }
-        }
+        });
     }
     
     @Override

@@ -1,6 +1,6 @@
 package carpet_client.network;
 
-import carpet_client.utils.CarpetRules;
+import carpet_client.utils.CarpetSettingsClientNetworkHandler;
 import carpet_client.utils.Reference;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
@@ -20,9 +20,9 @@ public class ClientMessageHandler
         int id = buffer.readVarInt();
     
         if (id == Reference.ALL_GUI_INFO)
-            CarpetRules.setAllData(buffer);
+            CarpetSettingsClientNetworkHandler.setAllData(buffer);
         if (id == Reference.CHANGE_RULE)
-            CarpetRules.ruleData(buffer);
+            CarpetSettingsClientNetworkHandler.updateRule(buffer);
     }
     
     public static void sendPacket(PacketByteBuf data, MinecraftClient client)
