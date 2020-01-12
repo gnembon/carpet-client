@@ -1,16 +1,7 @@
 package carpet_client.network;
 
-import carpet.CarpetServer;
-import carpet.helpers.TickSpeed;
-import carpet.CarpetSettings;
-import carpet.settings.ParsedRule;
-import carpet.utils.Messenger;
 import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.Reference;
-import io.netty.buffer.Unpooled;
-import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

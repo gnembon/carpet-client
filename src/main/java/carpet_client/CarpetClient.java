@@ -2,7 +2,6 @@ package carpet_client;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet_client.network.ServerMessageHandler;
 import carpet_client.utils.CarpetSettingsClientNetworkHandler;
 import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.Reference;

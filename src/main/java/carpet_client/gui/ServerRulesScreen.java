@@ -1,6 +1,5 @@
 package carpet_client.gui;
 
-import carpet_client.utils.CarpetSettingsClientNetworkHandler;
 import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;

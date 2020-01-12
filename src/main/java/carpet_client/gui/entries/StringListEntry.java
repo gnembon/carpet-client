@@ -3,7 +3,6 @@ package carpet_client.gui.entries;
 import carpet.settings.ParsedRule;
 import carpet_client.gui.ConfigListWidget;
 import carpet_client.gui.ServerRulesScreen;
-import carpet_client.utils.CarpetSettingsClientNetworkHandler;
 import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.ITooltipEntry;
 import carpet_client.utils.RenderHelper;
