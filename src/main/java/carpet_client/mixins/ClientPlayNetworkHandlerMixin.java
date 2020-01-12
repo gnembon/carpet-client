@@ -2,7 +2,6 @@ package carpet_client.mixins;
 
 import carpet_client.network.ClientMessageHandler;
 import carpet_client.utils.Reference;
-import carpet_client.utils.CarpetRules;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.util.Identifier;

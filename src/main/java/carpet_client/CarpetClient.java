@@ -2,7 +2,8 @@ package carpet_client;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet_client.network.ServerMessageHandler;
+import carpet_client.utils.CarpetSettingsClientNetworkHandler;
+import carpet_client.utils.CarpetSettingsServerNetworkHandler;
 import carpet_client.utils.Reference;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -32,7 +33,7 @@ public class CarpetClient implements CarpetExtension
         CarpetServer.settingsManager.addRuleObserver((source, parsedRule, s) -> {
             try
             {
-                ServerMessageHandler.updateCarpetClientRules(parsedRule.name, parsedRule.getAsString(), source.getPlayer());
+                CarpetSettingsServerNetworkHandler.updateCarpetClientRules(parsedRule.name, parsedRule.getAsString(), source.getPlayer());
             }
             catch (CommandSyntaxException e)
             {
@@ -47,6 +48,7 @@ public class CarpetClient implements CarpetExtension
         // reloading of /carpet settings is handled by carpet
         // reloading of own settings is handled as an extension, since we claim own settings manager
         Reference.isCarpetClientPresent = true;
+        CarpetSettingsClientNetworkHandler.attachServer(server);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class CarpetClient implements CarpetExtension
     @Override
     public void onPlayerLoggedIn(ServerPlayerEntity player)
     {
-        ServerMessageHandler.sendGUIInfo(player);
+        CarpetSettingsServerNetworkHandler.sendGUIInfo(player);
     }
 
     @Override
