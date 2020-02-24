@@ -12,7 +12,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -90,9 +90,9 @@ public class NumberListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.numberField.setEditableColor(this.invalid ? 16733525 : 16777215);
         if (invalid)
         {
-            GuiLighting.enableForItems();
+            DiffuseLighting.enableForItems();
             client.getItemRenderer().renderGuiItemIcon(new ItemStack(Items.BARRIER), this.numberField.x + this.numberField.getWidth() - 18, this.numberField.y- 1);
-            GuiLighting.disable();
+            DiffuseLighting.disable();
         }
         
         this.infoButton.x = x + 156;
