@@ -3,7 +3,7 @@ package carpet_client.network;
 import carpet_client.utils.CarpetSettingsClientNetworkHandler;
 import carpet_client.utils.Reference;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
