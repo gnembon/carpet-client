@@ -13,6 +13,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -89,9 +90,9 @@ public class StringListEntry extends ConfigListWidget.Entry implements ITooltipE
         this.textField.y = y + 3;
         if (this.textField.getText().isEmpty())
         {
-            RenderSystem.enableRescaleNormal();
+            DiffuseLighting.enable();
             client.getItemRenderer().renderGuiItemIcon(new ItemStack(Items.BARRIER), this.textField.x + this.textField.getWidth() - 18, this.textField.y- 1);
-            RenderSystem.disableRescaleNormal();
+            DiffuseLighting.disable();
         }
         
         this.infoButton.x = x + 156;
